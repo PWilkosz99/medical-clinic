@@ -1,0 +1,116 @@
+﻿@model IEnumerable<Patient>
+
+@{
+    string sortOrder = ViewBag.SortOrder ?? "firstname_asc";
+    string firstNameSortClass = sortOrder.Contains("firstname") ? (sortOrder.EndsWith("_asc") ? "firstname_asc" : "firstname_desc") : "";
+    string lastNameSortClass = sortOrder.Contains("lastname") ? (sortOrder.EndsWith("_asc") ? "asc" : "desc") : "";
+    string personalNumberSortClass = sortOrder.Contains("personalnumber") ? (sortOrder.EndsWith("_asc") ? "asc" : "desc") : "";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Patient List</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            cursor: pointer;
+        }
+
+            th:hover {
+                background-color: #ddd;
+            }
+
+        .asc:after {
+            content: "\25b2";
+        }
+
+        .desc:after {
+            content: "\25bc";
+        }
+
+        .pagination {
+            display: inline-block;
+        }
+
+            .pagination a {
+                color: black;
+                float: left;
+                padding: 8px 16px;
+                text-decoration: none;
+            }
+
+                .pagination a.active {
+                    background-color: #4CAF50;
+                    color: white;
+                }
+
+                .pagination a:hover:not(.active) {
+                    background-color: #ddd;
+                }
+    </style>
+</head>
+<body>
+    <p><a href="@Url.Action("Create", "Patient")">Create New Patient</a></p>
+
+    <form method="get" action="@Url.Action("Index", "Patient")">
+        <label for="search">Search:</label>
+        <input type="text" id="search" name="search" value="@ViewBag.SearchQuery" />
+        <button type="submit">Search</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    @Html.ActionLink("First Name", "Index", new { sortOrder = ViewBag.SortOrder == "firstname_asc" ? "firstname_desc" : "firstname_asc", search = ViewBag.SearchQuery })
+                </th>
+                <th>
+                    @Html.ActionLink("Last Name", "Index", new { sortOrder = ViewBag.SortOrder == "lastname_asc" ? "lastname_desc" : "lastname_asc", search = ViewBag.SearchQuery })
+                </th>
+                <th>
+                    @Html.ActionLink("Personal Number", "Index", new { sortOrder = ViewBag.SortOrder == "personalnumber_asc" ? "personalnumber_desc" : "personalnumber_asc", search = ViewBag.SearchQuery })
+                </th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var patient in Model)
+            {
+                <tr>
+                    <td>@patient.Firstname</td>
+                    <td>@patient.Lastname</td>
+                    <td>@patient.PersonalNumber</td>
+                    <td><a href="@Url.Action("Detail", "Patient", new { id = patient.Id })">Details</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        @if (ViewBag.HasPreviousPage)
+        {
+            <a href="@Url.Action("Index", new { page = ViewBag.PageIndex - 1, sortOrder = ViewBag.SortOrder, search = ViewBag.SearchQuery })">&laquo; Previous</a>
+        }
+        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+        {
+            <a href="@Url.Action("Index", new { page = i, sortOrder = ViewBag.SortOrder, search = ViewBag.SearchQuery })" class="@(i == ViewBag.PageIndex ? "active" : "")">@i</a>
+        }
+        @if (ViewBag.HasNextPage)
+        {
+            <a href="@Url.Action("Index", new { page = ViewBag.PageIndex + 1, sortOrder = ViewBag.SortOrder, search = ViewBag.SearchQuery })">Next &raquo;</a>
+        }
+    </div>
+</body>
+</html>

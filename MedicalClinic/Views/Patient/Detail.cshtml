@@ -1,0 +1,101 @@
+﻿@model Patient
+
+@{
+    ViewData["Title"] = "Patient Details";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"]</title>
+    <style>
+        .edit-mode input {
+            display: inline-block;
+        }
+
+        .display-mode span {
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <h1>Patient Details</h1>
+
+    <div id="patientDetails" class="display-mode">
+        <p>First name: <span>@Model.Firstname</span></p>
+        <p>Last name: <span>@Model.Lastname</span></p>
+        <p>Personal number: <span>@Model.PersonalNumber</span></p>
+        <p>Phone: <span>@Model.Phone</span></p>
+        <p>Email: <span>@Model.Email</span></p>
+
+        <h2>Address</h2>
+        <p>Street: <span>@Model.Address.Street</span></p>
+        <p>City: <span>@Model.Address.City</span></p>
+        <p>Zip: <span>@Model.Address.Zip</span></p>
+
+        <button type="button" onclick="editDetails()">Edit</button>
+        <button type="button" onclick="removePatient()">Remove</button>
+    </div>
+
+    <div id="editPatientDetails" class="edit-mode" style="display:none;">
+        <form asp-action="Update" asp-route-id="@Model.Id" method="post">
+            <div class="form-group">
+                <label asp-for="Firstname" class="control-label"></label>
+                <input asp-for="Firstname" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Lastname" class="control-label"></label>
+                <input asp-for="Lastname" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="PersonalNumber" class="control-label"></label>
+                <input asp-for="PersonalNumber" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Phone" class="control-label"></label>
+                <input asp-for="Phone" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+            </div>
+            <h4>Address</h4>
+            <div class="form-group">
+                <label asp-for="Address.Street" class="control-label"></label>
+                <input asp-for="Address.Street" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Address.City" class="control-label"></label>
+                <input asp-for="Address.City" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Address.Zip" class="control-label"></label>
+                <input asp-for="Address.Zip" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <button type="button" onclick="cancelEdit()">Cancel</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function editDetails() {
+            document.getElementById('patientDetails').style.display = 'none';
+            document.getElementById('editPatientDetails').style.display = 'block';
+        }
+
+        function cancelEdit() {
+            document.getElementById('patientDetails').style.display = 'block';
+            document.getElementById('editPatientDetails').style.display = 'none';
+        }
+
+        function removePatient() {
+            var confirmDelete = confirm("Are you sure you want to remove this patient?");
+            if (confirmDelete) {
+                window.location.href = "/Patient/Remove/@Model.Id";
+            }
+        }
+    </script>
+</body>
+</html>
