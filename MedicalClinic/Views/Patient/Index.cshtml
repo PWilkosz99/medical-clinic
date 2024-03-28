@@ -59,10 +59,20 @@
                 .pagination a:hover:not(.active) {
                     background-color: #ddd;
                 }
+
+        form {
+            padding: 20px 0;
+        }
+
+        .pagination {
+            padding-top: 16px;
+        }
+
     </style>
 </head>
 <body>
-    <p><a href="@Url.Action("Create", "Patient")">Create New Patient</a></p>
+
+    <h1>Patient list</h1>
 
     <form method="get" action="@Url.Action("Index", "Patient")">
         <label for="search">Search:</label>

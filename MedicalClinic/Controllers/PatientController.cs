@@ -17,7 +17,7 @@ namespace MedicalClinic.Controllers
 
         public async Task<IActionResult> Index(string sortOrder, string search, int? page)
         {
-            const int pageSize = 2;
+            const int pageSize = 10;
             int pageIndex = page ?? 1;
 
             var patients = await _patientRepository.GetAll();
